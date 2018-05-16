@@ -1,5 +1,2 @@
-def distance_to_hundred(n):
-    if abs(n-100) <= 10 or abs(n-200) <= 10:
-        return True
-    else:
-        return False
+def distancetohundred(n):
+    return abs(n-100) <= 10 or abs(n-200) <= 10

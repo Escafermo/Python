@@ -1,9 +1,5 @@
 def paper_doll(text):
-    i=0
-    newtext=''
-    while i < len(text):
-        newtext += text[i]*3
-        
-        i+=1
-        pass
+    newtext = ''
+    for char in text:
+        newtext += char * 3
     return newtext

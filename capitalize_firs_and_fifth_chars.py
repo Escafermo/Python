@@ -1,10 +1,5 @@
-def capitalizefirsandfifthchars(name):
-    i=0
-    newname=''
-    while i < len(name):
-        if i == 0 or i == 4:
-            newname+=name[i].upper()
-        else:
-            newname+=name[i]       
-        i+=1
-    return newname
+def capitalizefirstandfifthchars(name):
+    if len(name) > 3:
+        return name[:3].capitalize() + name[3:].capitalize()
+    else:
+        return 'Name is too short!'
