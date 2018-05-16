@@ -69,9 +69,9 @@ def player_input(player):
 from IPython.display import clear_output
 
 def display_board(board):
-    from IPython.display import clear_output
-    clear_output()
-    #print('\n'*100) # <== for IDEs
+    #from IPython.display import clear_output
+    #clear_output()
+    print('\n' * 100) # <== for IDEs
     
     print(board[7]+' | '+board[8]+' | '+board[9])
     print('---------')
