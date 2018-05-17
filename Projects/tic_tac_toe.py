@@ -13,9 +13,9 @@ Steps:
 --REPEAT--
 3- The Player chooses a position for his/hers next Mark
 4- The game checks if Victory or Full_Board
---REPEAT--
-5- If Victory, the game informs who won and asks if Replay
-6- If Full_Board, the game informs draw and asks if Replay
+5- If Victory, the game informs what Player won and asks if Replay (else:REPEAT)
+6- If Full_Board, the game informs draw and asks if Replay (else:REPEAT)
+--REPEAT
 7- If Replay negative, the game Shuts Down
 8- If Replay Positive, the game Starts at 1-
 '''
@@ -104,15 +104,13 @@ def display_board(board):
 def player_choice(board, player):
     position = 0
     digitset=set(string.digits)
-    
     while position not in [1,2,3,4,5,6,7,8,9] or not is_space_free(board, position):
         position = (input(f'{player} choose your next position: (1-9) '))
         if position in digitset:        # to catch int casting on letters and symbols
             position = int(position)
         else:
-            pass
+            print('Invalid char! Choose 1-9!')
     return position
-
     
 def is_space_free(board, position):
     return not(board[position] == 'X' or board[position] == 'O')
@@ -149,4 +147,6 @@ def replay():
             exit()
             break
 
-playtictactoe() # Calling the play function when running this script
+
+if __name__ == "__main__":
+    playtictactoe()
