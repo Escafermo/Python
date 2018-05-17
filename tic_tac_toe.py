@@ -22,12 +22,12 @@ Steps:
 
 def playtictactoe():
     
+    print("\n~~~ Welcome to Tic Tac Toe! ~~~\n")
     gameison = False
     firstplayer = choose_first()
     p1mrk, p2mrk = player_input(firstplayer)
-    
     nextplayer = firstplayer
-    board = [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ']
+    board = [' ']*10
     display_board(board)
     gameboard = board
     gameison = True
@@ -35,43 +35,45 @@ def playtictactoe():
     
     while gameison == True:
         
-        if win_check(gameboard) == True:
-            print(f'{nextplayer} WON THE GAME')
-            replay()
-        
-        if full_board_check(gameboard) == True:
-            print('DRAW!')
-            replay()
-        
         if nextplayer == 'Player1':
             marker = p1mrk
             player1pos = player_choice(gameboard, nextplayer)
             place_marker(gameboard, marker, player1pos)
             display_board(gameboard)
-            nextplayer = 'Player2'
-            win_check(gameboard)
-            full_board_check(gameboard)
-            pass
+            if win_check(gameboard,marker):
+                print(f'\n~~~ {nextplayer} WON THE GAME! ~~~\n')
+                replay()
+            if full_board_check(gameboard):
+                print('\n~~~ DRAW ~~~\n!')
+                replay()
+            else:
+                nextplayer = 'Player2'
+                pass
         elif nextplayer == 'Player2':
             marker = p2mrk
             player2pos = player_choice(gameboard, nextplayer)
             place_marker(gameboard, marker, player2pos)
             display_board(gameboard)
-            nextplayer = 'Player1'
-            win_check(gameboard)
-            full_board_check(gameboard)
-            pass
+            if win_check(gameboard,marker):
+                print(f'\n~~~ {nextplayer} WON THE GAME! ~~~\n')
+                replay()
+            if full_board_check(gameboard):
+                print('\n~~~ DRAW ~~~\n')
+                replay()
+            else:
+                nextplayer = 'Player1'
+                pass
         else:
             break
 
 def choose_first():
     if random.randint(1,2) == 1:
         print('Choosing random Player to start...')
-        print('Player1 goes first.')
+        print('\n >> Player1 goes first! << \n')
         return 'Player1'
     else:
         print('Choosing random Player to start...')
-        print('Player2 goes first.')
+        print('\n >> Player2 goes first! << \n')
         return 'Player2'
     
 def player_input(player):
@@ -100,7 +102,6 @@ def display_board(board):
 
 
 def player_choice(board, player):
-    
     position = 0
     digitset=set(string.digits)
     
@@ -114,71 +115,27 @@ def player_choice(board, player):
 
     
 def is_space_free(board, position):
-    if board[position] == 'X' or board[position] == 'O':
-        return False
-    else:
-        return True
+    return not(board[position] == 'X' or board[position] == 'O')
 
 
 def place_marker(board, marker, position):
-    
     board[position] = marker
     
-    
-def win_check(board):    
-    if board[1] == 'X' and board[2]== 'X' and board[3] == 'X':
-        return True
-    if board[4] == 'X' and board[5]== 'X' and board[6] == 'X':
-        return True
-    if board[7] == 'X' and board[8]== 'X' and board[9] == 'X':
-        return True
-    if board[1] == 'X' and board[4]== 'X' and board[7] == 'X':
-        return True
-    if board[2] == 'X' and board[5]== 'X' and board[8] == 'X':
-        return True
-    if board[3] == 'X' and board[6]== 'X' and board[9] == 'X':
-        return True
-    if board[1] == 'X' and board[5]== 'X' and board[9] == 'X':
-        return True
-    if board[3] == 'X' and board[5]== 'X' and board[7] == 'X':
-        return True
-    
-    if board[1] == 'O' and board[2]== 'O' and board[3] == 'O':
-        return True
-    if board[4] == 'O' and board[5]== 'O' and board[6] == 'O':
-        return True
-    if board[7] == 'O' and board[8]== 'O' and board[9] == 'O':
-        return True
-    if board[1] == 'O' and board[4]== 'O' and board[7] == 'O':
-        return True
-    if board[2] == 'O' and board[5]== 'O' and board[8] == 'O':
-        return True
-    if board[3] == 'O' and board[6]== 'O' and board[9] == 'O':
-        return True
-    if board[1] == 'O' and board[5]== 'O' and board[9] == 'O':
-        return True
-    if board[3] == 'O' and board[5]== 'O' and board[7] == 'O':
-        return True
-    
-    else:
-        return False
-    
+def win_check(board,marker):    
+    return ((board[7] == marker and board[8] == marker and board[9] == marker) or 
+    (board[4] == marker and board[5] == marker and board[6] == marker) or 
+    (board[1] == marker and board[2] == marker and board[3] == marker) or 
+    (board[7] == marker and board[4] == marker and board[1] == marker) or 
+    (board[8] == marker and board[5] == marker and board[2] == marker) or 
+    (board[9] == marker and board[6] == marker and board[3] == marker) or 
+    (board[7] == marker and board[5] == marker and board[3] == marker) or 
+    (board[9] == marker and board[5] == marker and board[1] == marker)) 
     
 def full_board_check(board):
-    i=0
-    counter=0
-    while i < len(board):
-        isthisfree = is_space_free(board,i)
-        if isthisfree == False:
-            counter+=1
-            i+=1
-        else:
-            i+=1
-    if counter == 9:
-        return True
-    else:
-        return False
-            
+    for i in range(1,10):
+        if is_space_free(board,i):
+            return False
+    return True
         
 def replay():
     replayornot = ''
