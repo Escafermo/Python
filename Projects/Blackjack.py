@@ -41,32 +41,39 @@ class Deck:
 
 
 class Hand:
-    def __init__(self):
-        self.cards = []  # start with an empty list as we did in the Deck class
-        self.value = 0   # start with zero value
-        self.aces = 0    # add an attribute to keep track of aces
+	def __init__(self):
+		self.cards = []  # start with an empty list as we did in the Deck class
+		self.value = 0   # start with zero value
+		self.aces = 0    # add an attribute to keep track of aces
     
-
-
-    def add_card(self,card):
-        self.cards.append(card)
-        cardkey = card.split()[0]
-        for (key, value) in (values.items()):
-        	if cardkey in key:
-        		if cardkey == 'Ace' and self.value+value > 21:
-        			self.value += 1
-        		else:
-        			self.value += value
-        return self.value
+	def add_card(self,card):
+		self.cards.append(card)
+		cardkey = card.split()[0]
+		for (key, value) in (values.items()):
+			if cardkey in key:
+				if cardkey == 'Ace' and self.value+value > 21:
+					self.value += 1
+				else:
+					self.value += value
+		return self.value
        
-    def adjust_for_ace(self):
-    	#if cardkey == 'Ace' and self.value+value > 21:
+	def adjust_for_ace(self):
+		#if cardkey == 'Ace' and self.value+value > 21:
     		#self.value+=1
     		# TODO adjust IF player human (?)
-        pass
+		pass
 
-    def __str__(self):
-        return str((self.cards))
+	def hide_card(self):
+		dealer_value = 0
+		dealer_card = self.cards[1].split()[0]
+		for (key, value) in (values.items()):
+			if dealer_card in key:
+				dealer_value += value
+		print(f'Dealer shown card is: {self.cards[1::]}')
+		return print((f'Dealer sown card value is: {dealer_value}'))
+
+	def __str__(self):
+		return str((self.cards))
     
 #myDict = {'age': ['12'], 'address': ['34 Main Street, 212 First Avenue'],
   #        'firstName': ['Alan', 'Mary-Ann'], 'lastName': ['Stone', 'Lee']}
@@ -80,126 +87,180 @@ class Hand:
 #search(myDict, 'Mary')
 
 class Chips:
-    
     def __init__(self):
         self.total = 100  # This can be set to a default value or supplied by a user input
-        self.bet = 0
-        
+        self.bet = 0  # TODO FIX THIS NUMBER
+
     def win_bet(self):
-    	self.total += self.bet*2
-        
-    
+    	self.total += (self.bet*2)
+    	return self.total
     def lose_bet(self):
     	self.total -= self.bet
+    	return self.total
 
+    def __str__(self):
+        return str((self.total))
 
 
 def take_bet():
 	betvalue = 0
 	while betvalue not in range(1,10):	# TODO fix this range
 		try:
-			betvalue = int(input(f'Give me money: '))
-			print(betvalue)
+			betvalue = int(input(f'Input bet amount: '))
+			return(betvalue)
 		except:
-			print('VALUE ERROR')
-		break
+			print('Value Error: input a number from 1 to your total chips')
+			continue
+		#break
 
 	pass
 
 def hit(deck,hand):
+	newcard = deck.deal()
+	hand.add_card(newcard)
 	pass
 
-def hit_or_stand(deck,hand):
-	global playing  # to control an upcoming while loop
-    
-	pass
+def hit_or_stand(deck,player_hand):
+	global playing  #to control an upcoming while loop
+	thisentry = ''
+	while thisentry != 'Hit' or thisentry != 'Stand':
+		if player_hand.value == 21:
+				player_wins()
+		thisentry = str(input('Give me Hit or Stand: '))
+		if thisentry == 'Hit':
+			hit(deck, player_hand)
+			break
+		elif thisentry == 'Stand':
+			playing = False
+			break
 
-def show_some(player,dealer):
-    
+def show_some(player_hand,dealer_hand):
+	#dealer_hide_hand = Hand()
+	#dealer_hide_hand.add_card(dealer_hide_card)
+	print(f'\nDealer hand has one card hidden. ')#nIt has a value of {dealer_hide_hand.value}')
+	dealer_hand.hide_card()
+	print(f'\nYour hand: {player_hand}\nYour value: {player_hand.value}')
 	pass
-def show_all(player,dealer):
-    
+def show_all(player_hand,dealer_hand):
+	print(f'\nDealer hand: {dealer_hand}\nDealer value: {dealer_hand.value}')
+	print(f'\nYour hand: {player_hand}\nYour value: {player_hand.value}')
+
 	pass
 
 def player_busts():
-    pass
+	print(f'PLAYER BUSTED!\nYour chips were: {player_chips}')
+	player_chips.lose_bet()
+	print(f'Lost {player_chips.bet} chips\nNew chips: {player_chips}')
+	push()
 def player_wins():
-    pass
-
+	print(f'PLAYER WINS!\nYour chips were: {player_chips}')
+	player_chips.win_bet()
+	print(f'Won {player_chips.bet*2} chips\nNew chips: {player_chips}')
+	push()
 def dealer_busts():
-    pass
+	print(f'DEALER BUSTED!\nYour chips were: {player_chips}')
+	player_chips.win_bet()
+	print(f'Won {player_chips.bet*2} chips\nNew chips: {player_chips}')
+	push()
     
 def dealer_wins():
-    pass
+	print(f'DEALER WINS!\nYour chips were: {player_chips}')
+	player_chips.lose_bet()
+	print(f'Lost {player_chips.bet} chips\nNew chips: {player_chips}')
+	push()
     
 def push():
-    pass
+	play_again = ''
+	while play_again != 'Y' or play_again != 'N':
+		play_again = str(input('Would you like to play more (Y/N): '))
+		if play_again == 'Y':
+			playing = True
+			play_black_jack()
+		elif play_again == 'N':
+			exit()
+
+def play_black_jack():
+	while True:
+		print("Welcome to Blackjack\n")
 
 
-def play_black_jack(self):
-	pass
+		mydeck = Deck()
+		mydeck.shuffle()
+
+		player_hand = Hand()
+		dealer_hand = Hand()
+
+		player_hand.add_card(mydeck.deal())
+		dealer_hand.add_card(mydeck.deal())
+		player_hand.add_card(mydeck.deal())
+		dealer_hand.add_card(mydeck.deal())
+
+		player_chips.bet = take_bet()
+
+		show_some(player_hand,dealer_hand)
+
+		while playing == True:
+			hit_or_stand(mydeck,player_hand)
+			show_some(player_hand,dealer_hand)
+			#if player_hand.value == 21:
+			#	player_wins()
+			if player_hand.value > 21:
+				player_busts()
+		#print(playing)
+		print('\n>>> Player Stand: Showing all cards<<<\n')
+		show_all(player_hand,dealer_hand)
+		while dealer_hand.value < 17:
+			print('\nDealer hand < 17 in value! Dealer hit!')
+			hit(mydeck,dealer_hand)
+			show_all(player_hand,dealer_hand)
+			if dealer_hand.value > 21:
+				dealer_busts()
+		if player_hand.value > dealer_hand.value:
+			player_wins()
+		else:
+			dealer_wins()
+
 	#while True:
     # Print an opening statement
-
-    
     # Create & shuffle the deck, deal two cards to each player
-
-    
-        
     # Set up the Player's chips
-    
-    
     # Prompt the Player for their bet
-
-    
     # Show cards (but keep one dealer card hidden)
-
-    
     #while playing:  # recall this variable from our hit_or_stand function
-        
         # Prompt for Player to Hit or Stand
-        
-        
         # Show cards (but keep one dealer card hidden)
- 
-        
         # If player's hand exceeds 21, run player_busts() and break out of loop
-        
-
         #    break
-
     # If Player hasn't busted, play Dealer's hand until Dealer reaches 17
-    
-    
         # Show all cards
-    
         # Run different winning scenarios
-        
-    
     # Inform Player of their chips total 
-    
     # Ask to play again
-
     #    break
 
 
-
-
-
-
-
-
 if __name__ == "__main__":
-	mydeck = Deck()
-	mydeck.shuffle()
-	myhand = Hand()
-	myhand.add_card(mydeck.deal())
-	myhand.add_card(mydeck.deal())
-	myhand.add_card(mydeck.deal())
-	#print(mydeck)
-	print(myhand)
-	print(myhand.value)
-	take_bet()
-#myhand = Hand()
+	player_chips = Chips()
+	play_black_jack()
+
+	#show_some(player_hand,dealer_hand)
+	#show_all(player_hand,dealer_hand)
+
+	#player_busts()
+	#player_wins()
+
+
+	#print(player_hand)
+	#print(player_hand.value)
+	#hit_or_stand(mydeck,player_hand)
+	#hit(mydeck, player_hand)
+	#print(player_hand)
+	#print(player_hand.value)
+	#take_bet()
+
+
+
+
+#player_hand = Hand()
 
 
